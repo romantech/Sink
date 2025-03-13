@@ -1,7 +1,7 @@
 name: Sync Upstream
 on:
-  schedule:
-    - cron: '0 0 * * *' # Every day at midnight (UTC)
+  push:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,4 @@ jobs:
         uses: BetaHuhn/repo-file-sync-action@v1
         with:
           GH_PAT: ${{ secrets.GH_PAT }} # repo 권한이 있는 PAT 필수
-          PR_LABELS: 'automated-sync'
-          CONFIG_PATH: .github/sync.yml
-          COMMIT_EACH_FILE: false # 단일 커밋으로 처리
-          SKIP_PR: true # PR 생성안하고 바로 PUSH
+          PR_LABELS: 'sync'
