@@ -1,0 +1,34 @@
+name: Repo Sync
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # 00:00 KST = 15:00 UTC (previous day)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-sync-master
+  cancel-in-progress: false
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout destination repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Sync upstream repository
+        uses: repo-sync/github-sync@v2
+        with:
+          source_repo: ccbikai/Sink
+          source_branch: master
+          destination_branch: master
+          sync_tags: true
+          github_token: ${{ secrets.PAT }}
